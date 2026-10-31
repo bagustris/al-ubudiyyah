@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f6f5c">
+<title>Silsilah Keluarga Masjid Winong</title>
+<meta name="description" content="Silsilah interaktif keluarga Masjid Winong">
+<style>
+:root{
+  --bg:#f6f4ef; --surface:#fff; --text:#1d2420; --muted:#66706a; --line:#c9cfc9; --accent:#1f6f5c; --accent-ink:#fff;
+  --g0-bg:#f5f5f5; --g0-bd:#666666;
+  --g1-bg:#dae8fc; --g1-bd:#6c8ebf;
+  --g2-bg:#ffe6cc; --g2-bd:#d79b00;
+  --g3-bg:#d5e8d4; --g3-bd:#82b366;
+  --g4-bg:#e1d5e7; --g4-bd:#9673a6;
+  --node-ink:#1d2420; --shadow:0 2px 10px rgba(0,0,0,.12);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121614; --surface:#1c221f; --text:#e8ece9; --muted:#9aa59e; --line:#3a443f; --accent:#4fb89c; --accent-ink:#06130f;
+    --g0-bg:#3a3d3b; --g0-bd:#9a9e9b; --g1-bg:#22364f; --g1-bd:#6c8ebf; --g2-bg:#4a3519; --g2-bd:#d79b00;
+    --g3-bg:#26402a; --g3-bd:#82b366; --g4-bg:#3d2f48; --g4-bd:#a98bc0; --node-ink:#e8ece9; --shadow:0 2px 10px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121614; --surface:#1c221f; --text:#e8ece9; --muted:#9aa59e; --line:#3a443f; --accent:#4fb89c; --accent-ink:#06130f;
+  --g0-bg:#3a3d3b; --g0-bd:#9a9e9b; --g1-bg:#22364f; --g1-bd:#6c8ebf; --g2-bg:#4a3519; --g2-bd:#d79b00;
+  --g3-bg:#26402a; --g3-bd:#82b366; --g4-bg:#3d2f48; --g4-bd:#a98bc0; --node-ink:#e8ece9; --shadow:0 2px 10px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;overscroll-behavior:none}
+button{font:inherit;color:inherit;cursor:pointer}
+header{padding:calc(10px + env(safe-area-inset-top)) 16px 8px;background:var(--accent);color:var(--accent-ink)}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+header #theme{flex:none;width:40px;height:40px;border:1px solid rgba(255,255,255,.4);background:transparent;border-radius:10px;color:inherit}
+header h1{margin:0;font-size:1rem;line-height:1.25}
+header p{margin:2px 0 0;font-size:.8rem;opacity:.85}
+.bar{display:flex;gap:8px;padding:8px 16px;background:var(--surface);border-bottom:1px solid var(--line);align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:8px 14px;min-height:40px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.search{flex:1 1 150px;min-width:0;position:relative}
+.search input{width:100%;min-height:40px;border:1px solid var(--line);border-radius:10px;padding:8px 34px 8px 12px;background:var(--bg);color:var(--text);font:inherit}
+.search input::-webkit-search-cancel-button{display:none}
+.search button{position:absolute;right:2px;top:2px;width:36px;height:36px;border:0;background:none;color:var(--muted);font-size:1.2rem}
+.tools{display:flex;gap:6px;width:100%}
+.tools button{flex:1}
+.tools button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 12px;min-height:36px;font-size:.85rem}
+.tools .sp{flex:1}
+.legend{display:flex;gap:5px;overflow-x:auto;padding:0 0 5px;justify-content:center;flex-wrap:wrap}
+.legend span{flex:none;font-size:.66rem;padding:1px 8px;border-radius:99px;border:1.5px solid;color:var(--node-ink)}
+.g0{background:var(--g0-bg);border-color:var(--g0-bd)}.g1{background:var(--g1-bg);border-color:var(--g1-bd)}
+.g2{background:var(--g2-bg);border-color:var(--g2-bd)}.g3{background:var(--g3-bg);border-color:var(--g3-bd)}.g4{background:var(--g4-bg);border-color:var(--g4-bd)}
+main{flex:1;min-height:0;position:relative}
+#outline{height:100%;overflow:auto;padding:12px 12px calc(24px + env(safe-area-inset-bottom))}
+#diagram{height:100%;overflow:auto;background:var(--bg);touch-action:pan-x pan-y;display:none}
+#diagram svg{display:block}
+.empty{padding:40px 16px;text-align:center;color:var(--muted)}
+
+/* outline */
+ul.t{list-style:none;margin:0;padding:0}
+ul.t ul{list-style:none;margin:0 0 0 14px;padding:0 0 0 10px;border-left:2px solid var(--line)}
+li.n{margin:6px 0}
+.row{display:flex;align-items:stretch;gap:6px}
+.tog{flex:none;width:32px;border:0;background:transparent;font-size:1rem;color:var(--muted);border-radius:8px}
+.tog.leaf{visibility:hidden}
+.tog:active{background:var(--line)}
+.card{flex:1;min-width:0;text-align:left;border:1.5px solid;border-radius:12px;padding:8px 12px;color:var(--node-ink);position:relative}
+.card .nm{font-weight:700;overflow-wrap:anywhere}
+.card .sub{font-size:.82rem;opacity:.85;overflow-wrap:anywhere}
+.card .cnt{position:absolute;right:10px;top:8px;font-size:.72rem;opacity:.7}
+.card.hit{outline:3px solid var(--accent);outline-offset:1px}
+.card.dim{opacity:.35}
+.card.sel{box-shadow:0 0 0 3px var(--accent)}
+li.n.collapsed>ul{display:none}
+
+/* diagram */
+.dn rect{stroke-width:1.5}
+.dn text{fill:var(--node-ink);font-family:inherit;pointer-events:none}
+.dn{cursor:pointer}
+.dn.dim{opacity:.3}
+.dn.hit rect,.dn.sel rect{stroke:var(--accent);stroke-width:3.5}
+.dn.path rect{stroke:var(--accent);stroke-width:2.5}
+.ln{fill:none;stroke:var(--line);stroke-width:1.5}
+.ln.path{stroke:var(--accent);stroke-width:2.5}
+.zoom{position:absolute;right:12px;bottom:calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px;z-index:3}
+.zoom[hidden]{display:none}
+.zoom button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);font-size:1.25rem}
+
+/* sheet */
+#scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:9}
+#sheet{position:fixed;left:0;right:0;bottom:0;max-height:75vh;overflow:auto;background:var(--surface);border-radius:18px 18px 0 0;box-shadow:var(--shadow);padding:8px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .22s ease;z-index:10}
+#sheet.open{transform:none}
+#sheet .grab{width:40px;height:4px;background:var(--line);border-radius:2px;margin:4px auto 10px}
+#sheet h2{margin:0 0 2px;font-size:1.3rem;overflow-wrap:anywhere}
+#sheet .badge{display:inline-block;font-size:.75rem;padding:2px 10px;border-radius:99px;border:1.5px solid;color:var(--node-ink);margin-bottom:8px}
+#sheet h3{margin:14px 0 6px;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid;border-radius:99px;padding:6px 12px;min-height:36px;color:var(--node-ink);font-size:.9rem}
+.plain{margin:0;color:var(--text)}
+.close{position:absolute;right:10px;top:10px;width:40px;height:40px;border:0;background:none;font-size:1.4rem;color:var(--muted)}
+footer{padding:6px 12px calc(6px + env(safe-area-inset-bottom));font-size:.7rem;color:var(--muted);text-align:center;background:var(--surface);border-top:1px solid var(--line)}
+@media (min-width:760px){
+  #sheet{left:auto;right:16px;bottom:16px;width:380px;border-radius:18px;max-height:80vh}
+  #scrim{display:none!important}
+}
+@media (prefers-reduced-motion:reduce){#sheet{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Silsilah Keluarga Masjid Winong</h1>
+  <p id="stats"></p></div>
+  <button id="theme" aria-label="Ganti tema">◐</button>
+</header>
+<div class="bar">
+  <div class="seg" id="famSeg" role="group" aria-label="Keluarga"></div>
+  <div class="seg" id="viewSeg" role="group" aria-label="Tampilan">
+    <button data-v="outline" aria-pressed="true">Daftar</button>
+    <button data-v="diagram" aria-pressed="false">Bagan</button>
+  </div>
+  <div class="search"><input id="q" type="search" placeholder="Cari nama…" autocomplete="off" aria-label="Cari nama"><button id="qx" aria-label="Hapus pencarian" hidden>×</button></div>
+  <div class="tools">
+    <button id="expAll">Buka semua</button>
+    <button id="colAll">Tutup semua</button>
+  </div>
+</div>
+<main>
+  <div id="outline"></div>
+  <div id="diagram"></div>
+  <div class="zoom" id="zoom" hidden>
+    <button data-z="1" aria-label="Perbesar">+</button>
+    <button data-z="-1" aria-label="Perkecil">−</button>
+    <button data-z="0" aria-label="Sesuaikan lebar">⤢</button>
+  </div>
+</main>
+<footer><div class="legend" id="legend"></div>Ketuk nama untuk detail</footer>
+<div id="scrim"></div>
+<div id="sheet" role="dialog" aria-modal="false" aria-labelledby="sh-title"></div>
+
+<script>
+const DATA = [{"name":"Tjo Karjo","gen":0,"alias":["Moh Tojib"],"spouse":["Sainah"],"kids":[{"name":"Sumorono","gen":1,"spouse":["Sainem"],"kids":[{"name":"Sarah","gen":2,"spouse":["Asmo","Kartosilun"],"kids":[{"name":"Sarju","gen":3}]},{"name":"Taslim","gen":2,"spouse":["Kotijah"]},{"name":"Saripah","gen":2,"spouse":["Mustakim"],"kids":[{"name":"Kakak Sih Waluyo","gen":3},{"name":"Sih Waluyo","gen":3,"spouse":["Jumirah"]}]},{"name":"Sukijah","gen":2,"spouse":["Imam Redjo"],"kids":[{"name":"Siti Romlah","gen":3},{"name":"Siti Saringatun","gen":3},{"name":"Sutrisno","gen":3,"spouse":["Zubaidah"],"kids":[{"name":"Nurleytta","gen":4},{"name":"Bagus","gen":4,"spouse":["Niken"]},{"name":"Diah","gen":4,"spouse":["Yogi"]}]}]},{"name":"Bari","gen":2,"spouse":["Suwarti"],"kids":[{"name":"Wahyu Margono","gen":3},{"name":"Wahyu Purnomo","gen":3}]},{"name":"Wadri","gen":2,"spouse":["Situn"],"kids":[{"name":"Muti'ah","gen":3},{"name":"Murtadlo","gen":3},{"name":"Ibnu Hajar","gen":3},{"name":"Siti Zaenab","gen":3},{"name":"Sofia","gen":3},{"name":"Sumarlin","gen":3},{"name":"Nurkana","gen":3},{"name":"Nawir","gen":3},{"name":"Tis'atun","gen":3}]}]},{"name":"Renuk","gen":1},{"name":"Sailah","gen":1,"spouse":["Sarban"],"kids":[{"name":"Juriyah","gen":2}]},{"name":"Saimah","gen":1,"spouse":["Ponco Jamin"],"kids":[{"name":"Soleman","gen":2,"kids":[{"name":"Wiji","gen":3},{"name":"Wakimin","gen":3},{"name":"Su","gen":3}]}]},{"name":"Saminem","gen":1},{"name":"Rakiman","gen":1,"alias":["Moch Socheh"],"spouse":["Suwuh"],"kids":[{"name":"Suwarni","gen":2},{"name":"Suwarti","gen":2},{"name":"Suwardi","gen":2},{"name":"Suwartin","gen":2},{"name":"Suwartun","gen":2}]},{"name":"Rakinem","gen":1,"spouse":["Mangun Suparto"]},{"name":"Sukinem","gen":1,"spouse":["Ahmad Diran"],"kids":[{"name":"Sukiran","gen":2},{"name":"Wariyem","gen":2},{"name":"Bolo","gen":2}]}]},{"name":"Sarijo","gen":0,"spouse":["Trinem"],"kids":[{"name":"Milah","gen":1},{"name":"Sainem","gen":1},{"name":"Saerah","gen":1},{"name":"Saimun","gen":1},{"name":"Saimin","gen":1},{"name":"Saimah","gen":1},{"name":"Jumilah","gen":1},{"name":"Maisah","gen":1},{"name":"Saimo","gen":1}]}];
+const GEN = ["Leluhur","Generasi 2","Generasi 3","Generasi 4","Generasi 5"];
+const FAM_LABEL = ["Keluarga Winong","Sarijo + Trinem"];
+const FAM_NOTE = ["", "Keluarga lain: pemilik tanah masjid dan pesarean"];
+
+/* ---- model ---- */
+let uid = 0;
+const byId = {};
+function prep(n, parent){
+  n.id = ++uid; n.parent = parent; n.open = n.gen < 2; byId[n.id] = n;
+  (n.kids||[]).forEach(k=>prep(k,n));
+}
+DATA.forEach(r=>prep(r,null));
+const kidsOf = n => n.kids || [];
+const descCount = n => kidsOf(n).reduce((s,k)=>s+1+descCount(k),0);
+const fullName = n => n.name + (n.alias ? " / " + n.alias.join(" / ") : "");
+const subline = n => [].concat(n.alias||[], (n.spouse||[]).map(s=>"+ "+s)).join(" · ");
+const total = DATA.reduce((s,r)=>s+1+descCount(r),0);
+document.getElementById("stats").textContent = total + " nama · " + DATA.length + " keluarga";
+
+let fam = 0, view = "outline", selId = null, query = "", zoom = 1;
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+
+/* ---- search ---- */
+function matches(n){
+  if(!query) return false;
+  const hay = norm([n.name].concat(n.alias||[], n.spouse||[]).join(" "));
+  return hay.includes(norm(query));
+}
+function anyMatch(n){ return matches(n) || kidsOf(n).some(anyMatch); }
+function openToMatches(n){
+  let hit = false;
+  kidsOf(n).forEach(k=>{ if(openToMatches(k)) hit = true; });
+  if(hit) n.open = true;
+  return hit || matches(n);
+}
+
+/* ---- legend / family switch ---- */
+$("#legend").innerHTML = GEN.map((g,i)=>`<span class="g${i}">${g}</span>`).join("");
+const famSeg = $("#famSeg");
+if(DATA.length>1){
+  famSeg.innerHTML = DATA.map((r,i)=>`<button data-f="${i}" aria-pressed="${i==fam}">${FAM_LABEL[i]||r.name}</button>`).join("");
+  famSeg.onclick = e=>{ const b=e.target.closest("button"); if(!b) return; fam=+b.dataset.f;
+    famSeg.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)); closeSheet(); render(); };
+} else famSeg.hidden = true;
+
+/* ---- outline ---- */
+function outlineHTML(n){
+  const kids = kidsOf(n), has = kids.length, hit = matches(n);
+  const dim = query && !hit ? " dim" : "";
+  const sub = subline(n);
+  let h = `<li class="n${has && !n.open ? " collapsed":""}" data-id="${n.id}"><div class="row">`
+    + `<button class="tog${has?"":" leaf"}" data-t="${n.id}" aria-label="${n.open?"Tutup":"Buka"} anak" aria-expanded="${!!n.open}">${n.open?"▾":"▸"}</button>`
+    + `<button class="card g${n.gen}${hit?" hit":""}${dim}${selId===n.id?" sel":""}" data-c="${n.id}">`
+    + `<div class="nm">${esc(n.name)}</div>${sub?`<div class="sub">${esc(sub)}</div>`:""}`
+    + (has?`<span class="cnt">${kids.length} anak</span>`:"") + `</button></div>`;
+  if(has) h += `<ul>${kids.map(outlineHTML).join("")}</ul>`;
+  return h + "</li>";
+}
+function renderOutline(){
+  const r = DATA[fam];
+  const note = FAM_NOTE[fam] ? `<p class="empty" style="padding:0 0 8px;text-align:left">${FAM_NOTE[fam]}</p>` : "";
+  $("#outline").innerHTML = note + `<ul class="t">${outlineHTML(r)}</ul>`
+    + (query && !anyMatch(r) ? `<div class="empty">Tidak ditemukan di keluarga ini.</div>` : "");
+}
+
+/* ---- diagram (left-to-right tree) ---- */
+const NW = 150, NH = 46, GX = 34, GY = 10;
+function layout(root){
+  const nodes = [], links = []; let row = 0;
+  (function walk(n, d){
+    const kids = n.open ? kidsOf(n) : [];
+    kids.forEach(k=>walk(k,d+1));
+    const sub = subline(n);
+    n._h = sub ? NH+8 : NH-6;
+    n._x = d*(NW+GX);
+    if(kids.length){ n._y = (kids[0]._y + kids[kids.length-1]._y)/2; }
+    else { n._y = row; row += n._h + GY; }
+    nodes.push(n);
+    kids.forEach(k=>links.push([n,k]));
+  })(root,0);
+  const W = Math.max(...nodes.map(n=>n._x))+NW+24, H = row + 8;
+  return {nodes, links, W, H};
+}
+function trunc(s, max){ return s.length>max ? s.slice(0,max-1)+"…" : s; }
+let L = null;
+function renderDiagram(){
+  L = layout(DATA[fam]);
+  const pathIds = new Set(); for(let p=selId&&byId[selId]; p; p=p.parent) pathIds.add(p.id);
+  const pad = 12;
+  let s = `<svg id="svg" xmlns="http://www.w3.org/2000/svg" width="${(L.W+pad*2)*zoom}" height="${(L.H+pad*2)*zoom}" viewBox="${-pad} ${-pad} ${L.W+pad*2} ${L.H+pad*2}">`;
+  L.links.forEach(([a,b])=>{
+    const x1=a._x+NW, y1=a._y+a._h/2, x2=b._x, y2=b._y+b._h/2, mx=x1+GX/2;
+    const on = pathIds.has(a.id)&&pathIds.has(b.id);
+    s += `<path class="ln${on?" path":""}" d="M${x1} ${y1}H${mx}V${y2}H${x2}"/>`;
+  });
+  L.nodes.forEach(n=>{
+    const kids=kidsOf(n), hit=matches(n), dim=query&&!hit;
+    const sub=subline(n);
+    s += `<g class="dn${hit?" hit":""}${dim?" dim":""}${n.id===selId?" sel":""}${pathIds.has(n.id)?" path":""}" data-c="${n.id}" transform="translate(${n._x} ${n._y})">`
+      + `<rect width="${NW}" height="${n._h}" rx="9" style="fill:var(--g${n.gen}-bg);stroke:var(--g${n.gen}-bd)"/>`
+      + `<text x="9" y="${sub?17:n._h/2+4.5}" font-size="12.5" font-weight="700">${esc(trunc(n.name,20))}</text>`
+      + (sub?`<text x="9" y="33" font-size="10.5" opacity=".85">${esc(trunc(sub,26))}</text>`:"")
+      + `</g>`;
+    if(kids.length){
+      s += `<g class="dn tg" data-t="${n.id}" transform="translate(${n._x+NW-2} ${n._y+n._h/2})"><circle r="11" style="fill:var(--surface);stroke:var(--accent);stroke-width:1.5"/>`
+        + `<text text-anchor="middle" y="4" font-size="12" font-weight="700" style="fill:var(--accent)">${n.open?"−":kids.length}</text></g>`;
+    }
+  });
+  const dg = $("#diagram"); dg.innerHTML = s + "</svg>";
+  if(fitZoom.center){ fitZoom.center=false; const r=DATA[fam]; dg.scrollTop=Math.max(0,(r._y+12)*zoom-dg.clientHeight/2); dg.scrollLeft=0; }
+}
+function fitZoom(){
+  const w = $("#diagram").clientWidth; if(!L) L = layout(DATA[fam]);
+  zoom = Math.min(1, Math.max(.4, w/(L.W+24)));
+  fitZoom.center = true;
+}
+$("#zoom").onclick = e=>{
+  const b = e.target.closest("button"); if(!b) return; const z = +b.dataset.z;
+  if(z===0){ fitZoom(); } else zoom = Math.min(2.2, Math.max(.3, zoom*(z>0?1.25:.8)));
+  renderDiagram();
+};
+$("#diagram").addEventListener("wheel", e=>{
+  if(!e.ctrlKey) return; e.preventDefault();
+  zoom = Math.min(2.2, Math.max(.3, zoom*(e.deltaY<0?1.1:.9))); renderDiagram();
+},{passive:false});
+/* pinch zoom */
+(function(){
+  const el = $("#diagram"); let d0=0, z0=1;
+  const dist = t => Math.hypot(t[0].clientX-t[1].clientX, t[0].clientY-t[1].clientY);
+  el.addEventListener("touchstart", e=>{ if(e.touches.length===2){ d0=dist(e.touches); z0=zoom; } },{passive:true});
+  el.addEventListener("touchmove", e=>{
+    if(e.touches.length===2 && d0){ e.preventDefault(); zoom=Math.min(2.2,Math.max(.3,z0*dist(e.touches)/d0)); renderDiagram(); }
+  },{passive:false});
+  el.addEventListener("touchend", ()=>{ d0=0; });
+})();
+/* drag to pan with mouse */
+(function(){
+  const el=$("#diagram"); let down=null, moved=false;
+  el.addEventListener("pointerdown",e=>{ if(e.pointerType!=="mouse") return; down={x:e.clientX,y:e.clientY,l:el.scrollLeft,t:el.scrollTop}; moved=false; });
+  window.addEventListener("pointermove",e=>{ if(!down) return; const dx=e.clientX-down.x, dy=e.clientY-down.y;
+    if(Math.abs(dx)+Math.abs(dy)>4) moved=true; el.scrollLeft=down.l-dx; el.scrollTop=down.t-dy; });
+  window.addEventListener("pointerup",()=>{ down=null; });
+  el.addEventListener("click",e=>{ if(moved){ e.stopPropagation(); e.preventDefault(); moved=false; } },true);
+})();
+
+/* ---- sheet ---- */
+function chip(n){ return `<button class="chip g${n.gen}" data-go="${n.id}">${esc(n.name)}</button>`; }
+function openSheet(n){
+  selId = n.id;
+  const anc = []; for(let p=n.parent;p;p=p.parent) anc.unshift(p);
+  const sib = n.parent ? kidsOf(n.parent).filter(x=>x!==n) : [];
+  const kids = kidsOf(n);
+  let h = `<div class="grab"></div><button class="close" id="sh-x" aria-label="Tutup">×</button><h2 id="sh-title">${esc(n.name)}</h2>`
+    + `<span class="badge g${n.gen}">${GEN[n.gen]}</span>`;
+  if(n.alias) h += `<h3>Juga dikenal sebagai</h3><p class="plain">${esc(n.alias.join(", "))}</p>`;
+  if(n.spouse) h += `<h3>Pasangan</h3><p class="plain">${esc(n.spouse.join(", "))}</p>`;
+  if(n.parent) h += `<h3>Orang tua</h3><div class="chips">${chip(n.parent)}</div>`;
+  if(anc.length>1) h += `<h3>Garis keturunan</h3><div class="chips">${anc.map(chip).join("")}</div>`;
+  if(kids.length) h += `<h3>Anak (${kids.length})</h3><div class="chips">${kids.map(chip).join("")}</div>`;
+  if(sib.length) h += `<h3>Saudara (${sib.length})</h3><div class="chips">${sib.map(chip).join("")}</div>`;
+  if(kids.length) h += `<h3>Keturunan</h3><p class="plain">${descCount(n)} orang</p>`;
+  $("#sheet").innerHTML = h;
+  $("#sheet").classList.add("open"); $("#scrim").style.display = "block";
+  render();
+}
+function closeSheet(){ selId=null; $("#sheet").classList.remove("open"); $("#scrim").style.display="none"; if(view==="outline"||view==="diagram") render(); }
+$("#scrim").onclick = closeSheet;
+$("#sheet").onclick = e=>{
+  if(e.target.closest("#sh-x")) return closeSheet();
+  const b = e.target.closest("[data-go]"); if(!b) return;
+  const n = byId[b.dataset.go];
+  for(let p=n.parent;p;p=p.parent) p.open = true;
+  const f = DATA.findIndex(r=>{ let x=n; while(x.parent) x=x.parent; return x===r; });
+  if(f!==fam){ fam=f; famSeg.querySelectorAll("button").forEach((x,i)=>x.setAttribute("aria-pressed",i===fam)); }
+  openSheet(n); reveal(n);
+};
+addEventListener("keydown", e=>{ if(e.key==="Escape") closeSheet(); });
+
+function reveal(n){
+  requestAnimationFrame(()=>{
+    if(view==="outline"){ const el=$(`.card[data-c="${n.id}"]`); el && el.scrollIntoView({block:"center",behavior:"smooth"}); }
+    else { const d=$("#diagram"); d.scrollTo({left:Math.max(0,(n._x+12)*zoom-d.clientWidth/3), top:Math.max(0,(n._y+12)*zoom-d.clientHeight/2), behavior:"smooth"}); }
+  });
+}
+
+/* ---- wiring ---- */
+function render(){
+  $("#outline").style.display = view==="outline" ? "" : "none";
+  $("#diagram").style.display = view==="diagram" ? "block" : "none";
+  $("#zoom").hidden = view!=="diagram";
+  if(view==="outline"){ const st=$("#outline").scrollTop; renderOutline(); $("#outline").scrollTop=st; }
+  else { const d=$("#diagram"), l=d.scrollLeft, t=d.scrollTop; renderDiagram(); d.scrollLeft=l; d.scrollTop=t; }
+}
+function toggle(id){ const n=byId[id]; n.open=!n.open; render(); }
+function onTap(e){
+  const t = e.target.closest("[data-t]"); if(t){ e.preventDefault(); return toggle(+t.dataset.t); }
+  const c = e.target.closest("[data-c]"); if(c) openSheet(byId[c.dataset.c]);
+}
+$("#outline").addEventListener("click", onTap);
+$("#diagram").addEventListener("click", onTap);
+
+$("#viewSeg").onclick = e=>{
+  const b=e.target.closest("button"); if(!b) return; view=b.dataset.v;
+  $("#viewSeg").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  if(view==="diagram" && !renderDiagram.fitted){ renderDiagram.fitted=1; $("#diagram").style.display="block"; fitZoom(); }
+  render();
+};
+let qt; $("#q").addEventListener("input", e=>{
+  clearTimeout(qt); qt=setTimeout(()=>{
+    query = e.target.value.trim(); $("#qx").hidden = !query;
+    if(query){
+      // switch to the family that holds a match, expand to reveal it
+      let f = DATA.findIndex((r)=>anyMatch(r));
+      if(f>=0 && f!==fam && !anyMatch(DATA[fam])){ fam=f; famSeg.querySelectorAll("button").forEach((x,i)=>x.setAttribute("aria-pressed",i===fam)); }
+      openToMatches(DATA[fam]);
+    }
+    render();
+    if(query && view==="outline"){ const h=$(".card.hit"); h && h.scrollIntoView({block:"center"}); }
+  },120);
+});
+$("#qx").onclick = ()=>{ $("#q").value=""; query=""; $("#qx").hidden=true; render(); };
+const setAll = (n,v,d=0)=>{ n.open = v ? true : d===0 && false; kidsOf(n).forEach(k=>setAll(k,v,d+1)); };
+$("#expAll").onclick = ()=>{ setAll(DATA[fam],true); render(); };
+$("#colAll").onclick = ()=>{ setAll(DATA[fam],false); DATA[fam].open = true; render(); };
+$("#theme").onclick = ()=>{
+  const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+  const nx = cur==="dark" ? "light" : "dark"; document.documentElement.dataset.theme = nx;
+  try{ localStorage.setItem("theme", nx); }catch(_){}
+};
+try{ const t=localStorage.getItem("theme"); if(t) document.documentElement.dataset.theme=t; }catch(_){}
+render();
+</script>
+</body>
+</html>
